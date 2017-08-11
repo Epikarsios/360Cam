@@ -27,7 +27,7 @@ def turnOffMotors():
 atexit.register(turnOffMotors)
 
 CamMotor = mh.getStepper(200, 2)  # 200 steps/rev, motor port #1
-CamMotor.setSpeed(40)             # 30 RPM
+CamMotor.setSpeed(10)             # 30 RPM
 def PrintTimer(timer):
 	j = 1
 	print('Starting in . . . %s')% timer
@@ -40,13 +40,18 @@ def ForStep(stepper,numberSteps):
 	for i in range (0,numberSteps):
 		stepper.oneStep(Adafruit_MotorHAT.FORWARD, Adafruit_MotorHAT.MICROSTEP)
 	
-#	turnOffMotors()
+	turnOffMotors()
 def BackStep(stepper,numberSteps):
 	
 	stepper.step(numberSteps, Adafruit_MotorHAT.BACKWARD, Adafruit_MotorHAT.MICROSTEP)
+	
 	turnOffMotors()
 
-
+def rotate(stepper):
+	degrees = input('How many degrees to rotate?')
+	ParDegree = (degrees)*(40/9)
+	print ('Rotating %s degrees') % degrees
+	ForStep(stepper,ParDegree)
 def rotate360(stepper):
 	AmtSteps = input('How many steps between pics?  ')
 	totalPics = 1600/(AmtSteps)
@@ -59,10 +64,10 @@ def rotate360(stepper):
 		takePic()
 		ForStep(CamMotor, AmtSteps)
 
-
-
 while True:
-	rotate360(CamMotor)
+	rotate(CamMotor)
+
+
 	turnOffMotors()
 
     
