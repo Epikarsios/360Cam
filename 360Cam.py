@@ -10,7 +10,7 @@ GPIO.setmode(GPIO.BCM) # Broadcom pin-numbering scheme
 GPIO.setup(shutterPin, GPIO.OUT) # LED pin set as output
 
 GPIO.output(shutterPin, GPIO.LOW)
-
+# gpio optoisolater 
 def takePic():
 	time.sleep(1)
 	GPIO.output(shutterPin, GPIO.HIGH)
@@ -28,8 +28,14 @@ atexit.register(turnOffMotors)
 
 CamMotor = mh.getStepper(200, 2)  # 200 steps/rev, motor port #1
 CamMotor.setSpeed(10)             # 30 RPM
-
-
+def PrintTimer(timer):
+	j = 1
+	print('Starting in . . . %s')% timer
+	for i in range (0,timer):
+		time.sleep(1)
+		print((timer)-j)
+		j+1
+		
 def ForStep(stepper,numberSteps):
 	for i in range (0,numberSteps):
 		stepper.oneStep(Adafruit_MotorHAT.FORWARD, Adafruit_MotorHAT.MICROSTEP)
@@ -46,9 +52,10 @@ def rotate360(stepper):
 	totalPics = 1600/(AmtSteps)
 	lenMov = (totalPics)/24
 	print('This will take %s pics') % totalPics
-	print ('Starting in 5 seconds')
-	time.sleep(5)
+	PrintTimer(3)
 	for i in range (0,totalPics):
+		
+		print('%s pics left')% (totalPics -i)
 		takePic()
 		ForStep(CamMotor, AmtSteps)
 
